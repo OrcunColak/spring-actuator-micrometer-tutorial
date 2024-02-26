@@ -18,6 +18,8 @@ public class ReadController {
 
     // http://localhost:8080/read
     // http://localhost:8080/actuator/prometheus
+    // http://localhost:8080/actuator/health/readiness
+    // http://localhost:8080/actuator/health/readiness
     // See these types
     // api_read_get_total
     // method_timed_seconds histogram
