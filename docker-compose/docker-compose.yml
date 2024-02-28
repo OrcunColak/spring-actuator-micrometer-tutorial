@@ -22,6 +22,14 @@ services:
     depends_on:
       - node-exporter
   
+  # http://localhost:9093
+  alert-manager:
+    image: prom/alertmanager
+    volumes:
+      - "./alertmanager/alertmanager.yml:/alertmanager/alertmanager.yml"
+    ports:
+      - "9093:9093"
+      
  # http://localhost:3000
   grafana:
     image: grafana/grafana:7.5.6
