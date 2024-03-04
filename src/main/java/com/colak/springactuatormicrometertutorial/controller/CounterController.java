@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping(path = "/counter")
 @RequiredArgsConstructor
 public class CounterController {
 
-    private final Random random = new Random();
+    private final Random random = ThreadLocalRandom.current();
 
     private Counter counter;
 

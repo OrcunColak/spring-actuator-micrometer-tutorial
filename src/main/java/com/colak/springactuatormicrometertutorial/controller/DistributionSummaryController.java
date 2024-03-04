@@ -1,6 +1,6 @@
 package com.colak.springactuatormicrometertutorial.controller;
 
-import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,45 +10,41 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
-@RequestMapping(path = "/gauge")
-
+@RequestMapping(path = "/distsummary")
 @RequiredArgsConstructor
-public class GaugeController {
+public class DistributionSummaryController {
 
     private final Random random = ThreadLocalRandom.current();
 
-    private Gauge gauge;
-
-    private final AtomicInteger gaugeInteger = new AtomicInteger();
+    private DistributionSummary distributionSummary;
 
     @Autowired
     public void setRegistry(MeterRegistry registry) {
-        gauge = createGauge(registry);
+        distributionSummary = createDistributionSummary(registry);
     }
 
-
-    // http://localhost:8080/gauge/read
+    // http://localhost:8080/distsummary/read
     // http://localhost:8080/actuator/prometheus
 
     // See these types
-    // gauge_read_get
+    // myDistributionSummary_count
+    // myDistributionSummary_sum
     @GetMapping("/read")
     public String read() throws InterruptedException {
         // Imitating call latency
         long millis = 10 + random.nextLong(50);
         Thread.sleep(millis);
 
-        gaugeInteger.set((int) millis);
-
+        distributionSummary.record(millis);
         return String.valueOf(millis);
     }
 
-    private Gauge createGauge(MeterRegistry meterRegistry) {
-        return Gauge.builder("gauge_read_get", gaugeInteger, AtomicInteger::get)
-                .description("Gauges something")
+    private DistributionSummary createDistributionSummary(MeterRegistry meterRegistry) {
+        // Count how many times this API has been called
+        return DistributionSummary.builder("myDistributionSummary")
+                .description("A custom distribution summary")
                 .tag("region", "us-east")
                 .register(meterRegistry);
     }

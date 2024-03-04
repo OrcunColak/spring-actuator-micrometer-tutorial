@@ -1,7 +1,7 @@
 package com.colak.springactuatormicrometertutorial.controller;
 
-import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,45 +10,48 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
-@RequestMapping(path = "/gauge")
-
+@RequestMapping(path = "/timer")
 @RequiredArgsConstructor
-public class GaugeController {
+public class TimerController {
 
     private final Random random = ThreadLocalRandom.current();
 
-    private Gauge gauge;
-
-    private final AtomicInteger gaugeInteger = new AtomicInteger();
+    private Timer timer;
 
     @Autowired
     public void setRegistry(MeterRegistry registry) {
-        gauge = createGauge(registry);
+        timer = createTimer(registry);
     }
 
 
-    // http://localhost:8080/gauge/read
+    // http://localhost:8080/timer/read
     // http://localhost:8080/actuator/prometheus
 
     // See these types
-    // gauge_read_get
+    // mytimer_seconds_count
+    // mytimer_seconds_max
     @GetMapping("/read")
-    public String read() throws InterruptedException {
-        // Imitating call latency
+    public String read() {
+
         long millis = 10 + random.nextLong(50);
-        Thread.sleep(millis);
 
-        gaugeInteger.set((int) millis);
+        timer.record(() -> {
+            try {
+                // Imitating call latency
+                Thread.sleep(millis);
+            } catch (InterruptedException exception) {
+                Thread.currentThread().interrupt();
 
+            }
+        });
         return String.valueOf(millis);
     }
 
-    private Gauge createGauge(MeterRegistry meterRegistry) {
-        return Gauge.builder("gauge_read_get", gaugeInteger, AtomicInteger::get)
-                .description("Gauges something")
+    private Timer createTimer(MeterRegistry meterRegistry) {
+        return Timer.builder("mytimer")
+                .description("Times something")
                 .tag("region", "us-east")
                 .register(meterRegistry);
     }
