@@ -1,4 +1,4 @@
-package com.colak.springactuatormicrometertutorial.controller;
+package com.colak.springtutorial.controller;
 
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;

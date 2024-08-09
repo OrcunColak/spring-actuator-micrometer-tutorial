@@ -1,6 +1,6 @@
-package com.colak.springactuatormicrometertutorial.exception;
+package com.colak.springtutorial.exception;
 
-import com.colak.springactuatormicrometertutorial.config.PrometheusCustomMonitor;
+import com.colak.springtutorial.config.PrometheusCustomMonitor;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -1,4 +1,4 @@
-package com.colak.springactuatormicrometertutorial.config;
+package com.colak.springtutorial.config;
 
 import io.micrometer.core.aop.TimedAspect;
 import io.micrometer.core.instrument.MeterRegistry;
