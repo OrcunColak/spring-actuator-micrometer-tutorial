@@ -49,6 +49,12 @@ public class TimerController {
         return String.valueOf(millis);
     }
 
+    // Prometheus uses seconds as its base unit for time. In real life scenarios, however, you will often have to measure and track very small,
+    // sub-second time durations. This means that you will have to find a way to track these small numbers (< 1.0 seconds) in the histogram.
+    // Using a scaled DistributionSummary does not work well to solve this issue because the unit of the metrics published will be scaled as well.
+    // For example, if you use a scale of 1000, the time measurement published will be in microseconds instead of seconds, which may cause confusion later.
+    // To solve this problem, instead of DistributionSummary, you can use Micrometer Timer.
+    // This class keeps track of the time measurements in nanoseconds and takes care of the conversion to seconds before publishing them.
     private Timer createTimer(MeterRegistry meterRegistry) {
         return Timer.builder("mytimer")
                 .description("Times something")
