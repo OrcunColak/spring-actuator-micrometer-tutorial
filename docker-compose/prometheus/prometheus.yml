@@ -24,8 +24,10 @@ scrape_configs:
       - targets:
           - 'node-exporter:9100'
   
-  - job_name: 'spring-actuator'
+  - job_name: 'SpringMonitoringApplication'
     metrics_path: /actuator/prometheus
     static_configs:
       - targets:
           - 'host.docker.internal:8080'
+        labels:
+          application: 'SpringMonitoringApplication'
