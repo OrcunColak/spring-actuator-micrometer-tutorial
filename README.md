@@ -25,13 +25,17 @@ On prometheus see these metrics
 
 # http_server_requests_seconds_count
 Request count of given endpoint per minute
+
 ```
 sum(rate(http_server_requests_seconds_count{uri=~".*api/v1/message/notification.*"}[1m])) * 60
 sum(rate(http_server_requests_seconds_count{uri=~".*api/v1/message/mail.*"}[1m])) * 60
 ```
 
-# Others
+# System
+system_cpu_usage
+jvm_memory_used_bytes
 
+# Others
 spring_data_repository_invocations_seconds_count
 spring_data_repository_invocations_seconds_count(method="findById")
 
